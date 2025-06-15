@@ -97,11 +97,16 @@ public class MainWindow extends JFrame {
         editbtn = new JButton("수정");
         deletebtn = new JButton("삭제");
 
+        JLabel hintLabel = new JLabel("※ 위 입력창에 수정할 내용을 입력한 뒤 수정 버튼을 누르세요.");
+        hintLabel.setForeground(Color.BLACK);
+        hintLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 11));
+        
         actionPanel.add(new JLabel("Search:"));
         actionPanel.add(tfview);
         actionPanel.add(viewbtn);
         actionPanel.add(editbtn);
         actionPanel.add(deletebtn);
+        actionPanel.add(hintLabel);
 
         // 리스트
         lectureList = new JList<>(listModel);

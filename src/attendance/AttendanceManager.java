@@ -5,8 +5,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import lecture.*;
-import 객체팀플.final2.src.lecture.Lecture;
-import 객체팀플.final2.src.lecture.LectureManager;
 
 public class AttendanceManager {
     private final List<AttendanceRecord> records = new ArrayList<>();

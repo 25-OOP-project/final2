@@ -1,5 +1,6 @@
 package lecture;
 
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import main.MainWindow;
@@ -7,7 +8,7 @@ import main.MainWindow;
 public class EditListener implements ActionListener {
 
 	MainWindow win = null;
-
+	
 	public void actionPerformed(ActionEvent e) { // 수정 리스너
 		int selectedIndex = win.lectureList.getSelectedIndex(); // 선택된 항목 인덱스 확인
 		if (selectedIndex != -1) {
