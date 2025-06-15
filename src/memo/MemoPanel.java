@@ -11,7 +11,7 @@ public class MemoPanel extends JPanel {
     private JComboBox<String> lectureComboBox;
     private JTextField dateField;
     private JTextArea memoTextArea;
-    private JButton saveButton, loadButton;
+    private JButton saveButton, loadButton, deleteButton;
     private static final String MEMO_ROOT = "./memo/";
 
     public MemoPanel(String[] lectureNames) {
@@ -26,29 +26,33 @@ public class MemoPanel extends JPanel {
 
         topPanel.add(new JLabel("날짜 입력 (yyyy-MM-dd):"));
         dateField = new JTextField(10);
-        dateField.setText(LocalDate.now().toString());  // 기본값: 오늘 날짜
+        dateField.setText(LocalDate.now().toString());  // 기본값: 오늘
         topPanel.add(dateField);
 
         add(topPanel, BorderLayout.NORTH);
 
-        // 중앙: 메모 입력창
+        // 중앙: 메모 입력 영역
         memoTextArea = new JTextArea(15, 40);
         JScrollPane scrollPane = new JScrollPane(memoTextArea);
         add(scrollPane, BorderLayout.CENTER);
 
-        // 하단: 저장 & 불러오기 버튼
+        // 하단: 버튼 3종
         JPanel buttonPanel = new JPanel();
         saveButton = new JButton("저장");
         loadButton = new JButton("불러오기");
+        deleteButton = new JButton("삭제");
+
         buttonPanel.add(saveButton);
         buttonPanel.add(loadButton);
+        buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
         // 이벤트 연결
         saveButton.addActionListener(e -> saveMemo());
         loadButton.addActionListener(e -> loadMemo());
+        deleteButton.addActionListener(e -> deleteMemo());
 
-        // 최상위 memo 디렉토리 없으면 생성
+        // memo 디렉토리 생성
         File rootDir = new File(MEMO_ROOT);
         if (!rootDir.exists()) rootDir.mkdirs();
     }
@@ -87,6 +91,32 @@ public class MemoPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "메모 불러오기 완료!\n" + fileName);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "불러오기 실패: " + ex.getMessage());
+        }
+    }
+
+    private void deleteMemo() {
+        String lectureName = (String) lectureComboBox.getSelectedItem();
+        String dateStr = dateField.getText().trim();
+
+        String lectureDirPath = MEMO_ROOT + lectureName + "/";
+        String fileName = lectureDirPath + dateStr + ".txt";
+        File memoFile = new File(fileName);
+
+        if (memoFile.exists()) {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "정말 삭제하시겠습니까?\n" + fileName,
+                    "삭제 확인", JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                if (memoFile.delete()) {
+                    memoTextArea.setText("");
+                    JOptionPane.showMessageDialog(this, "삭제 완료!\n" + fileName);
+                } else {
+                    JOptionPane.showMessageDialog(this, "삭제 실패");
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "삭제할 파일이 없습니다!");
         }
     }
 }
