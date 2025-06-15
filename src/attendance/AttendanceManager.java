@@ -5,10 +5,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import lecture.*;
+import 객체팀플.final2.src.lecture.Lecture;
+import 객체팀플.final2.src.lecture.LectureManager;
 
 public class AttendanceManager {
     private final List<AttendanceRecord> records = new ArrayList<>();
-    private final LectureManager lectureManager;  // LectureManager와 연동됨
+    private final LectureManager lectureManager; // LectureManager와 연동됨
 
     // 생성자에서 LectureManager를 받아옴
     public AttendanceManager(LectureManager lectureManager) {
@@ -40,6 +42,11 @@ public class AttendanceManager {
         records.add(record);
     }
 
+    // 날짜 중복 여부 확인 메서드 추가 (같은 날짜에 동일 강의 출석 기록 있는지 확인)
+    public boolean hasRecord(String lectureName, String date) {
+        return records.stream().anyMatch(r -> r.getLectureName().equals(lectureName) && r.getDate().equals(date));
+    }
+
     // 특정 강의의 출석 기록 모두 가져오기
     public List<AttendanceRecord> getRecordsByLecture(String lectureName) {
         return records.stream()
@@ -59,7 +66,8 @@ public class AttendanceManager {
     // 출석률 계산
     public double getAttendanceRate(String lectureName) {
         List<AttendanceRecord> lectureRecords = getRecordsByLecture(lectureName);
-        if (lectureRecords.isEmpty()) return 0.0;
+        if (lectureRecords.isEmpty())
+            return 0.0;
 
         long attended = lectureRecords.stream()
                 .filter(r -> r.getStatus().equals("출석"))

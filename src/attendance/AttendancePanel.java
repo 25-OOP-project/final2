@@ -8,11 +8,11 @@ import main.MainWindow;
 
 public class AttendancePanel extends JPanel {
 
-	private MainWindow win;
-	
+    private MainWindow win;
+
     public AttendancePanel(MainWindow win, String lectureName, AttendanceManager attManager) {
-    	this.win = win;
-    	setLayout(new GridLayout(2, 1));
+        this.win = win;
+        setLayout(new GridLayout(2, 1));
         // 사용자가 출석 정보를 입력하거나 확인하는 GUI 구성 요소.
 
         JLabel label = new JLabel("출석 상태를 선택하세요:", JLabel.CENTER);
@@ -52,11 +52,17 @@ public class AttendancePanel extends JPanel {
 
     private void 처리하기(AttendanceManager manager, String lectureName, String 상태) {
         String 오늘 = LocalDate.now().toString();
+
+        // 중복 출석 검사
+        if (manager.hasRecord(lectureName, 오늘)) {
+            JOptionPane.showMessageDialog(win, "오늘 날짜에 이미 출석 기록이 있습니다.\n다시 입력할 수 없습니다.");
+            return;
+        }
+
         manager.addRecord(new AttendanceRecord(lectureName, 오늘, 상태));
 
         JOptionPane.showMessageDialog(win, 상태 + " 처리 완료!");
         System.out.println(상태 + " 처리됨 (" + 오늘 + ")");
-        //window.dispose(); // 창 닫기
         win.showHomePanel(); // HOME으로 돌아가기
     }
 
